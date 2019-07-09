@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 535972226}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.163, z: 0}
+  m_LocalPosition: {x: 0, y: 0.229, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6167764756326812346}
@@ -184,12 +184,13 @@ MonoBehaviour:
   rangedKills: 0
   baseKills: 0
   movementSpeed: 5
-  bulletSpeed: 500
+  bulletSpeed: 10000
   bulletDamage: 0
   currentHealth: 0
+  maxHealth: 0
   reloadTime: 0
   currentReloadTime: 0
-  rb2d: {fileID: 8657546871154630201, guid: 2d7d27c359944d84ab55ed3d90c648a2, type: 3}
+  rb2d: {fileID: 5607342805486098120}
   col: {fileID: 0}
   bullet: {fileID: 8657546871154630202, guid: 2d7d27c359944d84ab55ed3d90c648a2, type: 3}
   playerShooter: {fileID: 535972227}
