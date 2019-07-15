@@ -188,7 +188,7 @@ MonoBehaviour:
   bulletDamage: 0
   currentHealth: 0
   maxHealth: 0
-  reloadTime: 0
+  reloadTime: 2
   currentReloadTime: 0
   rb2d: {fileID: 5607342805486098120}
   col: {fileID: 0}

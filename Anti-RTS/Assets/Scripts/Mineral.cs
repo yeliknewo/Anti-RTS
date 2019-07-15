@@ -2,20 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Base : MonoBehaviour
+public class Mineral : MonoBehaviour
 {
-    //Chunk chunk
-    public int resources;
-    //Planner planner
-    public int health;
-    public int maxHealth;
-    //public miningTarget;
-
+    Chunk chunk;
 
     // Start is called before the first frame update
     void Start()
     {
-        health = maxHealth;
+        
     }
 
     // Update is called once per frame

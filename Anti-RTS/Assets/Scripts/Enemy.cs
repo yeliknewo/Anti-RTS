@@ -21,6 +21,7 @@ public class Enemy : MonoBehaviour
     Unit unitType;
     //Chunk targetChunk;
     //Path path;
+    Team team = Team.ENEMY;
 
     void Move()
     {
@@ -32,10 +33,19 @@ public class Enemy : MonoBehaviour
 
     }
 
+    public void TakeDamage(int damage)
+    {
+        currentHealth = currentHealth - damage;
+        if(currentHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-
+        currentHealth = maxHealth;
     }
 
     // Update is called once per frame

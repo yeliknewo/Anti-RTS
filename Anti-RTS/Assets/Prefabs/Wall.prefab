@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5195198331053883801}
   - component: {fileID: 8736467464649726687}
+  - component: {fileID: 3693029263439158535}
+  - component: {fileID: 7776536940002044456}
   m_Layer: 0
   m_Name: Wall
   m_TagString: Untagged
@@ -26,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 681320738529749541}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.88, y: -0.07108892, z: -0.8496094}
-  m_LocalScale: {x: 10, y: 10, z: 1}
+  m_LocalScale: {x: 1.5, y: 3, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -68,8 +70,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d45691b24b9644245956dcd457e87d33, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 7db4e0c1060877d498ab17575341825f, type: 3}
+  m_Color: {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -79,3 +81,45 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &3693029263439158535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 681320738529749541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b6aa681456353a4a8c793d2052f9200, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  idEnum: 1
+--- !u!60 &7776536940002044456
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 681320738529749541}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 0.32, y: 0.32}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.25, y: 0.5}
+      - {x: -0.25, y: -0.5}
+      - {x: 0.25, y: -0.5}
+      - {x: 0.25, y: 0.5}

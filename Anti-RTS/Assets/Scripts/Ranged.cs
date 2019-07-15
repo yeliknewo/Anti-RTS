@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ranged : MonoBehaviour
+public class Ranged : Enemy
 {
     Enemy enemy;
     int damage;
