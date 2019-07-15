@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-enum Status
+enum WorkerJobStatus
 {
     MINING, DUMPING, MOVINGTOMINERAL
 }

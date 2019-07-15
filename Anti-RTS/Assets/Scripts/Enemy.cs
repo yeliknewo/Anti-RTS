@@ -15,32 +15,47 @@ public class Enemy : MonoBehaviour
         }
     }
     [SerializeField] int currentHealth;
-    double stallTimeLeft;
-    double movementSpeed;
+    float stallTimeLeft;
+    float Timer;
+    float movementSpeed;
     double movementLeft;
-    Unit unitType;
-    //Chunk targetChunk;
-    //Path path;
+    UnitType unitType;
+    Chunk targetChunk;
+    Path path;
+    static Vector2 pathTo;
+    Team team = Team.ENEMY;
 
     void Move()
     {
+        Timer += Time.deltaTime * movementSpeed;
 
+        if (Player.transform.position != targetChunk)
+        {
+            path.TakeNextNode();
+        }
+        else
+        {
+            transform.position = Vector2.Lerp(transform.position, pathTo, Timer);
+        }
     }
 
     void Stall()
     {
-
+        StartCoroutine(sleep());
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
     void Update()
     {
 
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHealth = currentHealth - damage;
+    }
+
+    IEnumerator sleep()
+    {
+        yield return new WaitForSeconds(stallTimeLeft);
     }
 }

@@ -4,16 +4,30 @@ using UnityEngine;
 
 public class Worker : MonoBehaviour
 {
-    
-    // Start is called before the first frame update
-    void Start()
+    Mineral miningTarget;
+    WorkerJobStatus jobStatus;
+    Base dumpBase;
+    Enemy enemy
     {
-        
+        get
+        {
+            return this.gameObject.GetComponent<Enemy>();
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    void MoveToMineral()
     {
-        
+        enemy.Move();
+    }
+
+    void Mine()
+    {
+        Enemy.Stall();
+    }
+
+    void Dump()
+    {
+        Enemy.Stall();
+        MoveToMineral();
     }
 }

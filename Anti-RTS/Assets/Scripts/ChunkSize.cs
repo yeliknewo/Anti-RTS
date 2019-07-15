@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Chunk
+public enum ChunkSize
 {
    Micro, Macro
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Unit
+public enum UnitType
 {
    MELEE, RANGED, WORKER
 }

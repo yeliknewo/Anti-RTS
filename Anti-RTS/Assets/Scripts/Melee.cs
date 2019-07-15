@@ -12,17 +12,46 @@ public class Melee : MonoBehaviour
     }
     
     int damage;
-    Rigidbody2D rb2d;
-    // Start is called before the first frame update
-    void Start()
+    double reloadTime;
+    double currentReloadTime;
+    float bulletSpeed;
+    GameObject bullet;
+    GameObject melee;
+    Transform enemyShooter;
+    
+
+    void Attack()
     {
-        this.gameObject.GetComponent<Enemy>();
-        
+        GameObject bulletShot = Instantiate(bullet, transform.position, transform.rotation);
+        bulletShot.transform.position = enemyShooter.position;
+        bulletShot.GetComponent<Rigidbody2D>().AddForce(enemyShooter.up * bulletSpeed * Time.deltaTime);
+        bulletShot.GetComponent<Bullet>().SetTeam(Enemy.team);
+        bulletShot.GetComponent<Bullet>().SetDamage(damage);
+        currentReloadTime = Time.time + reloadTime;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        if (currentReloadTime > 0)
+        {
+            enemy.Stall();
+            currentReloadTime = 0;
+        }
+        else
+        {
+            enemy.Move();
+        }
+        if (enemy.currentHealth = 0)
+        {
+            Destroy(melee);
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            Attack();
+        }
     }
 }
