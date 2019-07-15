@@ -9,6 +9,10 @@ public class Planner : MonoBehaviour
 	private Dictionary<UnitType, int> count;
 	private int resource = 0;
 
+	[SerializeField] private GameObject prefabMelee;
+	[SerializeField] private GameObject prefabRanged;
+	[SerializeField] private GameObject prefabWorker;
+
 	private void Spawn()
 	{
 		UnitType nextUnitType = GetNextUnit();
@@ -28,7 +32,7 @@ public class Planner : MonoBehaviour
 			case UnitType.WORKER:
 				unit = Instantiate<GameObject>(prefabWorker);
 				Worker worker = unit.GetComponent<Worker>();
-				worker.SetDumpBase(theBase);
+				worker.SetBase(theBase);
 				break;
 
 			default:

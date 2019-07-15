@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class AStar : MonoBehaviour
 {
-	[SerializeField]
-	private readonly float smallChunkDistance;
+	[SerializeField] float smallChunkDistance;
 
 	public Path FindPath(Chunk start, Chunk end)
 	{

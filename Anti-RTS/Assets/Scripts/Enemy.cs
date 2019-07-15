@@ -1,61 +1,76 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+[RequireComponent(typeof(Identifier))]
+[RequireComponent(typeof(Health))]
 public class Enemy : MonoBehaviour
 {
-    [SerializeField]
-    int maxHealth;
-    public int _maxHealth
-    {
-        get { return maxHealth; }
-        set
-        {
-            maxHealth = value;
-        }
-    }
-    [SerializeField] int currentHealth;
-    float stallTimeLeft;
-    float Timer;
-    float movementSpeed;
-    double movementLeft;
-    UnitType unitType;
-    Chunk targetChunk;
-    Path path;
-    static Vector2 pathTo;
-    Team team = Team.ENEMY;
+	[SerializeField] private float movementSpeed;
+	[SerializeField] private UnitType unitType;
 
-    void Move()
-    {
-        Timer += Time.deltaTime * movementSpeed;
+	private Chunk targetChunk;
+	private float stallTime;
+	private Node nextNode;
+	private Path path;
+	private bool dirtyPath;
 
-        if (Player.transform.position != targetChunk)
-        {
-            path.TakeNextNode();
-        }
-        else
-        {
-            transform.position = Vector2.Lerp(transform.position, pathTo, Timer);
-        }
-    }
+	public void SetTargetChunk(Chunk targetChunk)
+	{
+		this.targetChunk = targetChunk;
+		this.dirtyPath = true;
+	}
 
-    void Stall()
-    {
-        StartCoroutine(sleep());
-    }
+	public bool IsPathDone()
+	{
+		return nextNode == null && !dirtyPath;
+	}
 
-    void Update()
-    {
+	public bool IsStalled()
+	{
+		return stallTime > Time.time;
+	}
 
-    }
+	private void Start()
+	{
+		dirtyPath = true;
+	}
 
-    public void TakeDamage(int damage)
-    {
-        currentHealth = currentHealth - damage;
-    }
+	private void Update()
+	{
+		Move();
+	}
 
-    IEnumerator sleep()
-    {
-        yield return new WaitForSeconds(stallTimeLeft);
-    }
+	private void Move()
+	{
+		if (this.nextNode == null || this.stallTime > Time.time)
+		{
+			return;
+		}
+
+		float angle = Vector2.Angle(this.transform.position, this.nextNode.GetChunk().transform.position);
+		float movementDistance = Mathf.Min(this.movementSpeed, Vector2.Distance(this.transform.position, this.nextNode.GetChunk().transform.position));
+		this.transform.position = this.transform.position + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle)) * movementDistance;
+		if (movementDistance < this.movementSpeed)
+		{
+			if (this.dirtyPath)
+			{
+				UpdatePath(this.nextNode.GetChunk());
+			}
+			else
+			{
+				this.nextNode = this.path.TakeNextNode();
+			}
+		}
+	}
+
+	private void UpdatePath(Chunk currentChunk)
+	{
+		this.path = FindObjectOfType<AStar>().FindPath(currentChunk, this.targetChunk);
+		this.dirtyPath = false;
+	}
+
+	public void Stall(float stallTime)
+	{
+		this.stallTime = Time.time + stallTime;
+	}
+
 }

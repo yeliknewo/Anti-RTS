@@ -1,58 +1,45 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+[RequireComponent(typeof(Identifier))]
+[RequireComponent(typeof(Health))]
+[RequireComponent(typeof(Enemy))]
 public class Ranged : MonoBehaviour
-{ 
-    Enemy enemy
-    {
-        get {
-            return this.gameObject.GetComponent<Enemy>();
-        }
-    } 
-    
-    int damage;
-    double reloadTime;
-    double currentReloadTime;
-    int bulletDamage;
-    float bulletSpeed;
-    GameObject bullet;
-    GameObject ranged;
-    Transform enemyShooter;
-    
-    void Attack()
-    {
-        GameObject bulletShot = Instantiate(bullet, transform.position, transform.rotation);
-        bulletShot.transform.position = enemyShooter.position;
-        bulletShot.GetComponent<Rigidbody2D>().AddForce(enemyShooter.up * bulletSpeed * Time.deltaTime);
-        bulletShot.GetComponent<Bullet>().SetTeam(Enemy.team);
-        bulletShot.GetComponent<Bullet>().SetDamage(bulletDamage);
-        currentReloadTime = Time.time + reloadTime;
-    }
-    
+{
+	private Enemy enemy => gameObject.GetComponent<Enemy>();
+	private Player player;
+	[SerializeField] private int damage;
+	[SerializeField] private double reloadTime;
+	[SerializeField] private double currentReloadTime;
+	[SerializeField] private int bulletDamage;
+	[SerializeField] private float bulletSpeed;
+	[SerializeField] private float range;
+	[SerializeField] private GameObject prefabBullet;
+	[SerializeField] private Transform enemyShooter;
 
-    void Update()
-    {
-        if (currentReloadTime > 0)
-        {
-            enemy.Stall();
-            currentReloadTime = 0;
-        }
-        else
-        {
-            enemy.Move();
-        }
-        if(enemy.currentHealth = 0)
-        {
-            Destroy(ranged);
-        }
-    }
+	private Player GetPlayer()
+	{
+		if (player == null)
+		{
+			player = FindObjectOfType<Player>();
+		}
+		return player;
+	}
 
-    private void OnTriggerStay(Collider other)
-    {
-        if(other.tag == "Player")
-        {
-            Attack();
-        }
-    }
+	private void Attack()
+	{
+		GameObject bulletShot = Instantiate(this.prefabBullet, this.transform.position, this.transform.rotation);
+		bulletShot.transform.position = this.enemyShooter.position;
+		bulletShot.GetComponent<Rigidbody2D>().AddForce(this.enemyShooter.up * this.bulletSpeed * Time.deltaTime);
+		bulletShot.GetComponent<Bullet>().SetTeam(Team.ENEMY);
+		bulletShot.GetComponent<Bullet>().SetDamage(this.bulletDamage);
+		this.currentReloadTime = Time.time + this.reloadTime;
+	}
+
+	private void Update()
+	{
+		if (reloadTime < Time.time && Vector2.Distance(transform.position, GetPlayer().transform.position) < range)
+		{
+			Attack();
+		}
+	}
 }

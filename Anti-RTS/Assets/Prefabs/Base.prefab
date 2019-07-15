@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7191288011746186341}
   - component: {fileID: 7430335271967180522}
-  - component: {fileID: 7517056508763556162}
+  - component: {fileID: 1682778618482821407}
   - component: {fileID: 6387133706310887979}
   m_Layer: 0
   m_Name: Base
@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 5492775493811070267}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.03, y: 2.52, z: -0.8496094}
-  m_LocalScale: {x: 15, y: 15, z: 1}
+  m_LocalScale: {x: 5, y: 5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -70,8 +70,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 39da6b79ac562c04cbe949220875db1b, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 56250ab67a0e0574ba961e11332f8f60, type: 3}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -81,39 +81,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!60 &7517056508763556162
-PolygonCollider2D:
+--- !u!114 &1682778618482821407
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5492775493811070267}
   m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.32, y: 0.32}
-    newSize: {x: 0.32, y: 0.32}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: -0.040767387, y: 0.11160038}
-      - {x: -0.10081495, y: 0.046933398}
-      - {x: -0.10004754, y: -0.037700042}
-      - {x: -0.039232604, y: -0.101600364}
-      - {x: 0.037697766, y: -0.101600364}
-      - {x: 0.10234975, y: -0.03540009}
-      - {x: 0.10158235, y: 0.045400083}
-      - {x: 0.036930412, y: 0.11083371}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b6aa681456353a4a8c793d2052f9200, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  idEnum: 7
 --- !u!114 &6387133706310887979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,4 +108,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resources: 0
   health: 0
-  maxHealth: 0
+  maxHealth: 25

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Chunk : MonoBehaviour
@@ -10,17 +9,17 @@ public class Chunk : MonoBehaviour
 
 	public ChunkSize GetChunkSize()
 	{
-		return chunkSize;
+		return this.chunkSize;
 	}
 
 	public List<Chunk> GetLargeNeighbors()
 	{
-		return largeNeighbors;
+		return this.largeNeighbors;
 	}
 
 	public List<Chunk> GetSmallNeighbors()
 	{
-		return smallNeighbors;
+		return this.smallNeighbors;
 	}
 
 }
