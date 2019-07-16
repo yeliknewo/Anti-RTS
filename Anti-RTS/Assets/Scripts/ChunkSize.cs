@@ -4,6 +4,6 @@ using UnityEngine;
 
 public enum ChunkSize
 {
-   Micro, Macro
+   MACRO, MICRO
 }
 

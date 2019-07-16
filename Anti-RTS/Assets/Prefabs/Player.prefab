@@ -41,8 +41,10 @@ GameObject:
   - component: {fileID: 6167764756326812346}
   - component: {fileID: 7260721028059630631}
   - component: {fileID: 5607342805486098120}
-  - component: {fileID: 7561735568583770722}
   - component: {fileID: 6128587051861307404}
+  - component: {fileID: 1114800149579576478}
+  - component: {fileID: 3973016545082314237}
+  - component: {fileID: 3032419759709744448}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -58,8 +60,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5127210665552560747}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.98, y: -1.3, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 535972227}
   m_Father: {fileID: 0}
@@ -102,12 +104,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 12dad5ea31e409540b2b7bc6b8684cc8, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: e4c46ab450b6ec848b88b60930339d6e, type: 3}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.32, y: 0.32}
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -134,7 +136,50 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!60 &7561735568583770722
+--- !u!114 &6128587051861307404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5127210665552560747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757f6367e5b3af642a6fe9ea53900462, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentReloadTime: 0
+  prefabBullet: {fileID: 8657546871154630202, guid: 2d7d27c359944d84ab55ed3d90c648a2,
+    type: 3}
+  playerShooter: {fileID: 535972227}
+--- !u!114 &1114800149579576478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5127210665552560747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b6aa681456353a4a8c793d2052f9200, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  idEnum: 5
+--- !u!114 &3973016545082314237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5127210665552560747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5e83ffe6505be74e96bcc2f6a5e69a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 1
+  currentHealth: 1
+--- !u!60 &3032419759709744448
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -151,46 +196,14 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.32, y: 0.32}
-    newSize: {x: 0.32, y: 0.32}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.01, y: 0.13}
-      - {x: -0.13, y: 0.01}
-      - {x: -0.13, y: -0.099999994}
-      - {x: -0.11, y: -0.12}
-      - {x: 0.11, y: -0.12}
-      - {x: 0.13, y: -0.099999994}
-      - {x: 0.13, y: 0.01}
-      - {x: 0.01, y: 0.13}
---- !u!114 &6128587051861307404
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5127210665552560747}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 757f6367e5b3af642a6fe9ea53900462, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  workerKills: 0
-  meleeKills: 0
-  rangedKills: 0
-  baseKills: 0
-  movementSpeed: 5
-  bulletSpeed: 10000
-  bulletDamage: 0
-  currentHealth: 0
-  maxHealth: 0
-  reloadTime: 2
-  currentReloadTime: 0
-  rb2d: {fileID: 5607342805486098120}
-  col: {fileID: 0}
-  bullet: {fileID: 8657546871154630202, guid: 2d7d27c359944d84ab55ed3d90c648a2, type: 3}
-  playerShooter: {fileID: 535972227}
+    - - {x: 0, y: 0.5}
+      - {x: -0.4330127, y: -0.25000003}
+      - {x: 0.43301272, y: -0.24999996}

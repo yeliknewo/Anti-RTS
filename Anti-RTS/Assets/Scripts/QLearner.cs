@@ -2,13 +2,24 @@
 using UnityEngine;
 public class QLearner
 {
-	private readonly EndlessArray<double> qValues;
+	private readonly EndlessArray qValues;
 	private readonly List<Action> actions;
 
 	public QLearner(List<Action> actions, List<int> tableDimensions, double startingQ)
 	{
 		this.actions = actions;
-		this.qValues = new EndlessArray<double>(tableDimensions, startingQ, -startingQ);
+		this.qValues = new EndlessArray(tableDimensions, startingQ, -startingQ);
+	}
+
+	public QLearner(List<Action> actions, string pathToQValues)
+	{
+		this.actions = actions;
+		this.qValues = Utils.loadFromDisk<EndlessArray>(pathToQValues);
+	}
+
+	public void saveToDisk(string pathToQValues)
+	{
+		Utils.saveToDisk(pathToQValues, this.qValues);
 	}
 
 	public State RunStep(World world, State state, int eValue, double alpha, double gamma, bool wonLastGame)
@@ -144,9 +155,10 @@ public class Action
 	}
 }
 
+[System.Serializable]
 public class State
 {
-	private const int PRECISION = 100;
+	public const int PRECISION = 100;
 
 	private readonly Dictionary<UnitType, float> ratio;
 
@@ -163,11 +175,11 @@ public class State
 	public List<int> GetInputs()
 	{
 		List<int> inputs = new List<int>
-			{
-				Mathf.RoundToInt(this.ratio[UnitType.WORKER] * PRECISION),
-				Mathf.RoundToInt(this.ratio[UnitType.MELEE] * PRECISION),
-				Mathf.RoundToInt(this.ratio[UnitType.RANGED] * PRECISION)
-			};
+		{
+			Mathf.RoundToInt(this.ratio[UnitType.WORKER] * PRECISION),
+			Mathf.RoundToInt(this.ratio[UnitType.MELEE] * PRECISION),
+			Mathf.RoundToInt(this.ratio[UnitType.RANGED] * PRECISION)
+		};
 		return inputs;
 	}
 }

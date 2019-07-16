@@ -8,47 +8,47 @@ public class Identifier : MonoBehaviour
 
     public bool IsMineral()
     {
-        return idEnum == IdEnum.Mineral;
+        return idEnum == IdEnum.MINERAL;
     }
 
     public bool IsWall()
     {
-        return idEnum == IdEnum.Wall;
+		return idEnum == IdEnum.WALL;
     }
 
     public bool IsPlayer()
     {
-        return idEnum == IdEnum.Player;
+        return idEnum == IdEnum.PLAYER;
     }
 
     public bool IsWorker()
     {
-        return idEnum == IdEnum.Worker;
+        return idEnum == IdEnum.WORKER;
     }
 
     public bool IsEnemy()
     {
-        return idEnum == IdEnum.Worker || idEnum == IdEnum.Ranged || idEnum == IdEnum.Melee;
+        return idEnum == IdEnum.WORKER || idEnum == IdEnum.RANGED || idEnum == IdEnum.MELEE;
     }
 
     public bool IsMelee()
     {
-        return idEnum == IdEnum.Melee;
+        return idEnum == IdEnum.MELEE;
     }
 
     public bool IsRanged()
     {
-        return idEnum == IdEnum.Ranged;
+        return idEnum == IdEnum.RANGED;
     }
 
     public bool IsBullet()
     {
-        return idEnum == IdEnum.Bullet;
+        return idEnum == IdEnum.BULLET;
     }
 
     public bool IsBase()
     {
-        return idEnum == IdEnum.Base;
+        return idEnum == IdEnum.BASE;
     }
 }
  

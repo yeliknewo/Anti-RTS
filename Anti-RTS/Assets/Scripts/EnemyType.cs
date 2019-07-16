@@ -4,5 +4,5 @@ using UnityEngine;
 
 public enum EnemyType
 {
-    Melee, Ranged, Worker, Base
+    MELEE, RANGED, WORKER, BASE
 }

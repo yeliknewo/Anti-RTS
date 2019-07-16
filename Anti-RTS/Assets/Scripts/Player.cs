@@ -1,57 +1,167 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 [RequireComponent(typeof(Identifier))]
 [RequireComponent(typeof(Health))]
 public class Player : MonoBehaviour
 {
-	[SerializeField] private int workerKills;
-	[SerializeField] private int meleeKills;
-	[SerializeField] private int rangedKills;
-	[SerializeField] private int baseKills;
-	[SerializeField] private double movementSpeed;
-	[SerializeField] private float bulletSpeed;
-	[SerializeField] private int bulletDamage;
-	[SerializeField] private double reloadTime;
-	[SerializeField] private double currentReloadTime;
-	[SerializeField] private Rigidbody2D rb2d;
-	[SerializeField] private PolygonCollider2D col;
-	[SerializeField] private Chunk currentChunk;
+	[SerializeField] private float currentReloadTime;
 	[SerializeField] private GameObject prefabBullet;
 	[SerializeField] private Transform playerShooter;
+	[SerializeField] private Chunk currentMacroChunk;
+	[SerializeField] private Chunk currentMicroChunk;
 
-	public Chunk GetChunk()
+	private Dictionary<StatType, Stat> stats;
+	private Dictionary<EnemyType, int> kills;
+
+	public Chunk GetCurrentMacroChunk()
 	{
-		return this.currentChunk;
+		return this.currentMacroChunk;
 	}
 
-	// Update is called once per frame
+	public Chunk GetCurrentMicroChunk()
+	{
+		return this.currentMicroChunk;
+	}
+
+	public void Setup()
+	{
+		this.currentMacroChunk = FindObjectOfType<Planner>().GetClosestMacroChunk(this.transform.position);
+		this.currentMicroChunk = this.currentMacroChunk.GetClosestMicroChunk(this.transform.position);
+		this.kills = new Dictionary<EnemyType, int>
+			{
+				{ EnemyType.BASE, 0 },
+				{ EnemyType.MELEE, 0 },
+				{ EnemyType.RANGED, 0 },
+				{ EnemyType.WORKER, 0 },
+			};
+		this.stats = new Dictionary<StatType, Stat>
+		{
+			{
+				StatType.MOVEMENT_SPEED,
+				new Stat(
+					this.kills,
+					1.0f,
+					new Dictionary<EnemyType, float>
+					{
+						{ EnemyType.BASE, 1.0f },
+						{ EnemyType.MELEE, 1.0f },
+						{ EnemyType.RANGED, 1.0f },
+						{ EnemyType.WORKER, 1.0f },
+					}
+				)
+			},
+			{
+				StatType.BULLET_DAMAGE,
+				new Stat(
+					this.kills,
+					1.0f,
+					new Dictionary<EnemyType, float>
+					{
+						{ EnemyType.BASE, 1.0f },
+						{ EnemyType.MELEE, 1.0f },
+						{ EnemyType.RANGED, 1.0f },
+						{ EnemyType.WORKER, 1.0f },
+					}
+				)
+			},
+			{
+				StatType.BULLET_SPEED,
+				new Stat(
+					this.kills,
+					1.0f,
+					new Dictionary<EnemyType, float>
+					{
+						{ EnemyType.BASE, 1.0f },
+						{ EnemyType.MELEE, 1.0f },
+						{ EnemyType.RANGED, 1.0f },
+						{ EnemyType.WORKER, 1.0f },
+					}
+				)
+			},
+			{
+				StatType.RELOAD_TIME,
+				new Stat(
+					this.kills,
+					1.0f,
+					new Dictionary<EnemyType, float>
+					{
+						{ EnemyType.BASE, 1.0f },
+						{ EnemyType.MELEE, 1.0f },
+						{ EnemyType.RANGED, 1.0f },
+						{ EnemyType.WORKER, 1.0f },
+					}
+				)
+			},
+			{
+				StatType.MAX_HEALTH,
+				new Stat(
+					this.kills,
+					1.0f,
+					new Dictionary<EnemyType, float>
+					{
+						{ EnemyType.BASE, 1.0f },
+						{ EnemyType.MELEE, 1.0f },
+						{ EnemyType.RANGED, 1.0f },
+						{ EnemyType.WORKER, 1.0f },
+					}
+				)
+			}
+		};
+	}
+
+	private Rigidbody2D GetRigidbody2D()
+	{
+		return GetComponent<Rigidbody2D>();
+	}
+
+	private void UpdateStats()
+	{
+		foreach (Stat stat in this.stats.Values)
+		{
+			stat.SetDirty();
+		}
+		GetComponent<Health>().SetMaxHealth(Mathf.RoundToInt(GetStatVal(StatType.MAX_HEALTH)));
+	}
+
+	public void DoKill(EnemyType enemyType)
+	{
+		this.kills[enemyType]++;
+		UpdateStats();
+	}
+
+	private float GetStatVal(StatType statType)
+	{
+		return this.stats[statType].GetStat();
+	}
+
 	private void Update()
 	{
-		//transform.Translate((float)movementSpeed*Input.GetAxis("Horizontal") * Time.deltaTime, (float)movementSpeed * Input.GetAxis("Vertical") * Time.deltaTime, 0f);
+		this.transform.position = this.transform.position + new Vector3(Input.GetAxis("HorizontalLeft"), Input.GetAxis("VerticalLeft")).normalized * GetStatVal(StatType.MOVEMENT_SPEED) * Time.deltaTime;
 
-		Vector3 movement = new Vector3(Input.GetAxis("HorizontalLeft") * (float)this.movementSpeed * Time.deltaTime, Input.GetAxis("VerticalLeft") * (float)this.movementSpeed * Time.deltaTime);
-		this.rb2d.MovePosition(this.transform.position + movement);
-
+		if (this.currentMacroChunk == null)
+		{
+			this.currentMacroChunk = FindObjectOfType<Planner>().GetClosestMacroChunk(this.transform.position);
+		}
+		else
+		{
+			this.currentMacroChunk = this.currentMacroChunk.GetClosestMacroChunk(this.transform.position);
+		}
+		if (this.currentMicroChunk == null)
+		{
+			this.currentMicroChunk = this.currentMacroChunk.GetClosestMicroChunk(this.transform.position);
+		}
+		else
+		{
+			this.currentMicroChunk = this.currentMicroChunk.GetClosestMicroChunk(this.transform.position);
+		}
 
 		if (Input.GetAxis("VerticalRight") != 0 && Input.GetAxis("HorizontalRight") != 0)
 		{
-			float angle = (Mathf.Atan2(Input.GetAxis("VerticalRight"), Input.GetAxis("HorizontalRight")) * Mathf.Rad2Deg) - 90;
-			Debug.Log(angle);
-			this.transform.rotation = Quaternion.Euler(0, 0, angle);
+			this.transform.rotation = Quaternion.Euler(0, 0, (Mathf.Atan2(Input.GetAxis("VerticalRight"), Input.GetAxis("HorizontalRight")) * Mathf.Rad2Deg) - 90);
 		}
 
-		//Mathf.atan2 to get the angle of an x,y cos give x, sin gives y.
-		//rotation = quaternian.euler of atan2 to handle player rotation.
-		//Get camera to follow player
-		if (Input.GetKey(KeyCode.Q))
-		{
-			this.transform.Rotate(0f, 0f, 1f);
-		}
-		if (Input.GetKey(KeyCode.E))
-		{
-			this.transform.Rotate(0f, 0f, -1f);
-		}
-		if (Input.GetButtonDown("Fire1"))
+		if (Input.GetButton("Fire1"))
 		{
 			if (Time.time > this.currentReloadTime)
 			{
@@ -64,9 +174,49 @@ public class Player : MonoBehaviour
 	{
 		GameObject bulletShot = Instantiate(this.prefabBullet, this.transform.position, this.transform.rotation);
 		bulletShot.transform.position = this.playerShooter.position;
-		bulletShot.GetComponent<Rigidbody2D>().AddForce(this.playerShooter.up * this.bulletSpeed * Time.deltaTime);
+		bulletShot.GetComponent<Rigidbody2D>().AddForce(this.playerShooter.up * GetStatVal(StatType.BULLET_SPEED), ForceMode2D.Impulse);
 		bulletShot.GetComponent<Bullet>().SetTeam(Team.PLAYER);
-		bulletShot.GetComponent<Bullet>().SetDamage(this.bulletDamage);
-		this.currentReloadTime = Time.time + this.reloadTime;
+		bulletShot.GetComponent<Bullet>().SetDamage(Mathf.RoundToInt(GetStatVal(StatType.BULLET_DAMAGE)));
+		this.currentReloadTime = Time.time + GetStatVal(StatType.RELOAD_TIME);
+	}
+
+	private enum StatType
+	{
+		MOVEMENT_SPEED, BULLET_DAMAGE, RELOAD_TIME, MAX_HEALTH, BULLET_SPEED
+	}
+
+	private class Stat
+	{
+		private readonly float baseVal;
+		private readonly Dictionary<EnemyType, float> mults;
+		private readonly Dictionary<EnemyType, int> kills;
+		private bool dirty;
+		private float val;
+
+		public Stat(Dictionary<EnemyType, int> kills, float baseVal, Dictionary<EnemyType, float> mults)
+		{
+			this.kills = kills;
+			this.baseVal = baseVal;
+			this.mults = mults;
+			SetDirty();
+		}
+
+		public void SetDirty()
+		{
+			this.dirty = true;
+		}
+
+		public float GetStat()
+		{
+			if (this.dirty)
+			{
+				this.val = this.baseVal;
+				foreach (EnemyType enemyType in this.mults.Keys)
+				{
+					this.val += this.kills[enemyType] * this.mults[enemyType];
+				}
+			}
+			return this.val;
+		}
 	}
 }

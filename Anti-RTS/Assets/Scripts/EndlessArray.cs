@@ -1,53 +1,53 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 
-public class EndlessArray<T>
+[Serializable]
+public class EndlessArray
 {
-	Dictionary<int, T> data;
-	List<int> dimSizes;
-	private T startingVal;
-	private T minVal;
+	private Dictionary<int, double> data;
+	private List<int> dimSizes;
+	private double startingVal;
+	private double minVal;
 
-	public EndlessArray(List<int> dimSizes, T startingVal, T minVal)
+	public EndlessArray(List<int> dimSizes, double startingVal, double minVal)
 	{
 		this.dimSizes = dimSizes;
 		this.startingVal = startingVal;
 		this.minVal = minVal;
-		data = new Dictionary<int, T>();
+		this.data = new Dictionary<int, double>();
 	}
 
-	public T GetAt(List<int> indices)
+	public double GetAt(List<int> indices)
 	{
 		int index = GetIndex(indices);
 		if (index == -1)
 		{
-			return minVal;
+			return this.minVal;
 		}
-		if (data.ContainsKey(index))
+		if (this.data.ContainsKey(index))
 		{
-			return data[index];
+			return this.data[index];
 		}
 		else
 		{
-			return startingVal;
+			return this.startingVal;
 		}
 	}
 
-	public void SetAt(List<int> indices, T val)
+	public void SetAt(List<int> indices, double val)
 	{
 		int index = GetIndex(indices);
 		if (index == -1)
 		{
 			return;
 		}
-		if (data.ContainsKey(index))
+		if (this.data.ContainsKey(index))
 		{
-			data[index] = val;
+			this.data[index] = val;
 		}
 		else
 		{
-			data.Add(index, val);
+			this.data.Add(index, val);
 		}
 	}
 
@@ -57,12 +57,12 @@ public class EndlessArray<T>
 		int pow = 1;
 		for (int i = indices.Count - 1; i >= 0; i--)
 		{
-			if (indices[i] >= dimSizes[i] || indices[i] < 0)
+			if (indices[i] >= this.dimSizes[i] || indices[i] < 0)
 			{
 				return -1;
 			}
 			index += indices[i] * pow;
-			pow *= dimSizes[i];
+			pow *= this.dimSizes[i];
 		}
 		return index;
 	}

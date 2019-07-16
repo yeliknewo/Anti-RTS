@@ -27,15 +27,15 @@ public class AStar : MonoBehaviour
 
 			if (current.GetChunk().Equals(end))
 			{
-				List<Node> nodes = new List<Node>();
+				List<Chunk> chunks = new List<Chunk>();
 				Node_ temp = current;
-				while (temp != null)
+				while (temp.GetFrom() != null)
 				{
-					nodes.Add(new Node(temp.GetChunk(), temp.GetDistanceToFrom()));
+					chunks.Add(temp.GetChunk());
 					temp = closedSet[temp.GetFrom()];
 				}
-				nodes.Reverse();
-				return new Path(nodes);
+				chunks.Reverse();
+				return new Path(chunks);
 			}
 
 			openSet.Remove(currentChunk);
@@ -45,11 +45,11 @@ public class AStar : MonoBehaviour
 
 			if (current.GetHScore() < this.smallChunkDistance)
 			{
-				neighborChunks = current.GetChunk().GetSmallNeighbors();
+				neighborChunks = current.GetChunk().GetMicroNeighbors();
 			}
 			else
 			{
-				neighborChunks = current.GetChunk().GetLargeNeighbors();
+				neighborChunks = current.GetChunk().GetMacroNeighbors();
 			}
 
 			foreach (Chunk neighborChunk in neighborChunks)
@@ -87,7 +87,14 @@ public class AStar : MonoBehaviour
 		{
 			this.chunk = chunk;
 			this.from = from;
-			this.distanceToFrom = (chunk.transform.position - from.transform.position).magnitude;
+			if(from == null)
+			{
+				this.distanceToFrom = 0f;
+			}
+			else
+			{
+				this.distanceToFrom = (chunk.transform.position - from.transform.position).magnitude;
+			}
 			CalculateScores(openSet, end);
 		}
 

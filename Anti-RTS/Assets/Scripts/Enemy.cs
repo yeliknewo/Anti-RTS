@@ -6,10 +6,9 @@ public class Enemy : MonoBehaviour
 {
 	[SerializeField] private float movementSpeed;
 	[SerializeField] private UnitType unitType;
-
-	private Chunk targetChunk;
-	private float stallTime;
-	private Node nextNode;
+	[SerializeField] private Chunk targetChunk;
+	[SerializeField] private float stallTime;
+	[SerializeField] private Chunk nextChunk;
 	private Path path;
 	private bool dirtyPath;
 
@@ -19,19 +18,29 @@ public class Enemy : MonoBehaviour
 		this.dirtyPath = true;
 	}
 
+	public UnitType GetUnitType()
+	{
+		return unitType;
+	}
+
+	public Chunk GetTargetChunk()
+	{
+		return this.targetChunk;
+	}
+
 	public bool IsPathDone()
 	{
-		return nextNode == null && !dirtyPath;
+		return this.nextChunk == null && !this.dirtyPath;
 	}
 
 	public bool IsStalled()
 	{
-		return stallTime > Time.time;
+		return this.stallTime > Time.time;
 	}
 
 	private void Start()
 	{
-		dirtyPath = true;
+		this.dirtyPath = true;
 	}
 
 	private void Update()
@@ -41,23 +50,31 @@ public class Enemy : MonoBehaviour
 
 	private void Move()
 	{
-		if (this.nextNode == null || this.stallTime > Time.time)
+		if (this.nextChunk == null)
+		{
+			if(dirtyPath)
+			{
+				UpdatePath(targetChunk);
+			}
+			return;
+		}
+		if(this.stallTime > Time.time)
 		{
 			return;
 		}
 
-		float angle = Vector2.Angle(this.transform.position, this.nextNode.GetChunk().transform.position);
-		float movementDistance = Mathf.Min(this.movementSpeed, Vector2.Distance(this.transform.position, this.nextNode.GetChunk().transform.position));
+		float angle = Vector2.Angle(this.transform.position, this.nextChunk.transform.position);
+		float movementDistance = Mathf.Min(this.movementSpeed, Vector2.Distance(this.transform.position, this.nextChunk.transform.position));
 		this.transform.position = this.transform.position + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle)) * movementDistance;
 		if (movementDistance < this.movementSpeed)
 		{
 			if (this.dirtyPath)
 			{
-				UpdatePath(this.nextNode.GetChunk());
+				UpdatePath(this.targetChunk);
 			}
 			else
 			{
-				this.nextNode = this.path.TakeNextNode();
+				this.nextChunk = this.path.TakeNextChunk();
 			}
 		}
 	}

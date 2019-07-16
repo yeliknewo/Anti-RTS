@@ -1,21 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 public class Path
 {
-	private List<Node> nodes;
+	private readonly List<Chunk> chunks;
 
-	public Path(List<Node> nodes)
+	public Path(List<Chunk> chunks)
 	{
-		this.nodes = nodes;
+		this.chunks = chunks;
 	}
 
-	public Node TakeNextNode()
+	public Chunk TakeNextChunk()
 	{
-		Node node = nodes[0];
-		nodes.RemoveAt(0);
-		return node;
+		Chunk chunk = this.chunks[0];
+		this.chunks.RemoveAt(0);
+		return chunk;
 	}
 
 }

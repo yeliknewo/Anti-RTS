@@ -11,26 +11,55 @@ public class Melee : MonoBehaviour
 	[SerializeField] private float range;
 	[SerializeField] private double reloadTime;
 	[SerializeField] private double currentReloadTime;
-	private Player player; //Caching
-
-	private Player GetPlayer()
+	private Player _player; //Caching
+	private Player player
 	{
-		if(player == null)
+		get
 		{
-			player = FindObjectOfType<Player>();
+			if(_player == null)
+			{
+				_player = FindObjectOfType<Player>();
+			}
+			return _player;
 		}
-		return player;
+	}
+
+	private const float MACRO_CHUNK_RANGE = 10.0f;
+
+	public void Setup()
+	{
+		TargetPlayer();
 	}
 
 	private void Attack()
 	{
-		currentReloadTime = Time.time + reloadTime;
-		player.GetComponent<Health>().TakeDamage(damage);
+		this.currentReloadTime = Time.time + this.reloadTime;
+		this.player.GetComponent<Health>().TakeDamage(this.damage);
+	}
+
+	private void TargetPlayer()
+	{
+		this.enemy.SetTargetChunk(this.player.GetCurrentMicroChunk());
 	}
 
 	private void Update()
 	{
-		if (reloadTime < Time.time && Vector2.Distance(transform.position, GetPlayer().transform.position) < range)
+		if (Vector2.Distance(this.player.transform.position, this.transform.position) > MACRO_CHUNK_RANGE)
+		{
+			if (this.player.GetCurrentMacroChunk() != this.enemy.GetTargetChunk().GetMacroNeighbors()[0])
+			{
+				TargetPlayer();
+			}
+		}
+		else
+		{
+			if(this.player.GetCurrentMicroChunk() != this.enemy.GetTargetChunk())
+			{
+				TargetPlayer();
+			}
+		}
+
+		if (this.reloadTime < Time.time && Vector2.Distance(this.transform.position, this.player.transform.position) < this.range)
 		{
 			Attack();
 		}

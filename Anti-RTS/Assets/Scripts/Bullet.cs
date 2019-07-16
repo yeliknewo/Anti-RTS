@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(Identifier))]
 public class Bullet : MonoBehaviour
 {
-	[SerializeField] private Rigidbody2D rb2d;
-	[SerializeField] private PolygonCollider2D col;
 	[SerializeField] private int damage;
 	private Team team;
 
@@ -28,12 +27,9 @@ public class Bullet : MonoBehaviour
 			collision.gameObject.GetComponent<Health>().TakeDamage(this.damage);
 			Destroy(this.gameObject);
 		}
-		else if (collision.gameObject.GetComponent<Identifier>().IsBullet())
+		else if (collision.gameObject.GetComponent<Identifier>().IsBullet() && this.team != collision.GetComponent<Bullet>().GetTeam())
 		{
-			if ((this.team == Team.ENEMY && collision.gameObject.GetComponent<Bullet>().GetTeam() == Team.PLAYER) || (this.team == Team.PLAYER && collision.gameObject.GetComponent<Bullet>().GetTeam() == Team.ENEMY))
-			{
-				Destroy(this.gameObject);
-			}
+			Destroy(this.gameObject);
 		}
 	}
 
