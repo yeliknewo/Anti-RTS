@@ -9,18 +9,23 @@ public class Enemy : MonoBehaviour
 	[SerializeField] private Chunk targetChunk;
 	[SerializeField] private float stallTime;
 	[SerializeField] private Chunk nextChunk;
+	[SerializeField] private Chunk currentChunk;
 	private Path path;
 	private bool dirtyPath;
 
 	public void SetTargetChunk(Chunk targetChunk)
 	{
+		if (targetChunk == null)
+		{
+			Debug.LogError("Target Chunk is Null");
+		}
 		this.targetChunk = targetChunk;
 		this.dirtyPath = true;
 	}
 
 	public UnitType GetUnitType()
 	{
-		return unitType;
+		return this.unitType;
 	}
 
 	public Chunk GetTargetChunk()
@@ -38,11 +43,6 @@ public class Enemy : MonoBehaviour
 		return this.stallTime > Time.time;
 	}
 
-	private void Start()
-	{
-		this.dirtyPath = true;
-	}
-
 	private void Update()
 	{
 		Move();
@@ -50,38 +50,77 @@ public class Enemy : MonoBehaviour
 
 	private void Move()
 	{
-		if (this.nextChunk == null)
+		bool usePath = this.unitType == UnitType.WORKER;
+		if (this.unitType != UnitType.WORKER)
 		{
-			if(dirtyPath)
+			foreach (RaycastHit2D hit in Physics2D.RaycastAll(this.transform.position, FindObjectOfType<Player>().transform.position))
 			{
-				UpdatePath(targetChunk);
+				if (hit.collider.GetComponent<Identifier>().IsWall())
+				{
+					usePath = true;
+				}
 			}
-			return;
 		}
-		if(this.stallTime > Time.time)
-		{
-			return;
-		}
-
-		float angle = Vector2.Angle(this.transform.position, this.nextChunk.transform.position);
-		float movementDistance = Mathf.Min(this.movementSpeed, Vector2.Distance(this.transform.position, this.nextChunk.transform.position));
-		this.transform.position = this.transform.position + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle)) * movementDistance;
-		if (movementDistance < this.movementSpeed)
+		if (this.nextChunk == null)
 		{
 			if (this.dirtyPath)
 			{
-				UpdatePath(this.targetChunk);
+				UpdatePath();
+			}
+			else
+			{
+				return;
+			}
+		}
+		if (this.stallTime > Time.time)
+		{
+			return;
+		}
+		Vector2 target;
+		if (usePath)
+		{
+			target = this.nextChunk.transform.position;
+		}
+		else
+		{
+			target = FindObjectOfType<Player>().transform.position;
+		}
+		Vector2 diff = target - (Vector2)this.transform.position;
+		float angle = Mathf.Atan2(diff.y, diff.x);
+		bool snap = false;
+		float moveMove = movementSpeed * Time.deltaTime;
+		float distance = diff.magnitude;
+		if(distance < moveMove)
+		{
+			snap = true;
+		}
+		if (snap)
+		{
+			transform.position = target;
+			if (this.dirtyPath)
+			{
+				UpdatePath();
 			}
 			else
 			{
 				this.nextChunk = this.path.TakeNextChunk();
 			}
 		}
+		else
+		{
+			this.transform.position = this.transform.position + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle)) * moveMove;
+		}
+		this.currentChunk = this.currentChunk.GetClosestChunk(this.transform.position);
 	}
 
-	private void UpdatePath(Chunk currentChunk)
+	private void UpdatePath()
 	{
-		this.path = FindObjectOfType<AStar>().FindPath(currentChunk, this.targetChunk);
+		if (this.currentChunk == null)
+		{
+			this.currentChunk = FindObjectOfType<Planner>().GetClosestChunk(this.transform.position);
+		}
+		this.path = FindObjectOfType<AStar>().FindPath(this.currentChunk, this.targetChunk);
+		this.nextChunk = this.path.TakeNextChunk();
 		this.dirtyPath = false;
 	}
 

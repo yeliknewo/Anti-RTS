@@ -11,6 +11,10 @@ public class Path
 
 	public Chunk TakeNextChunk()
 	{
+		if(chunks.Count == 0)
+		{
+			return null;
+		}
 		Chunk chunk = this.chunks[0];
 		this.chunks.RemoveAt(0);
 		return chunk;

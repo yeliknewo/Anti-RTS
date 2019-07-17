@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Planner : MonoBehaviour
 {
-	private const int UNIT_COST = 100;
+	private const int UNIT_COST = 5;
 
 	private Dictionary<UnitType, float> ratio;
 	private Dictionary<UnitType, int> count;
@@ -13,8 +13,7 @@ public class Planner : MonoBehaviour
 	private State state;
 	private World world;
 
-	[SerializeField] private GameObject prefabMacroChunk;
-	[SerializeField] private GameObject prefabMicroChunk;
+	[SerializeField] private GameObject prefabChunk;
 	[SerializeField] private Transform topRightMapBorder;
 	[SerializeField] private Transform bottomLeftMapBorder;
 	[SerializeField] private int startingResources;
@@ -26,8 +25,7 @@ public class Planner : MonoBehaviour
 	[SerializeField] private int eValue;
 	[SerializeField] private double alpha;
 	[SerializeField] private double gamma;
-	[SerializeField] private float macroDistance;
-	[SerializeField] private float microDistance;
+	[SerializeField] private float chunkDistance;
 	[SerializeField] private Chunk uberChunk;
 
 	private void Spawn()
@@ -62,7 +60,7 @@ public class Planner : MonoBehaviour
 
 	private void Update()
 	{
-		if (this.resources > UNIT_COST)
+		if (this.resources >= UNIT_COST)
 		{
 			Spawn();
 		}
@@ -73,14 +71,9 @@ public class Planner : MonoBehaviour
 		this.resources += amount;
 	}
 
-	public Chunk GetClosestMacroChunk(Vector2 position)
+	public Chunk GetClosestChunk(Vector2 position)
 	{
-		return uberChunk.GetClosestMacroChunk(position);
-	}
-
-	public Chunk GetClosestMicroChunk(Vector2 positon)
-	{
-		return uberChunk.GetClosestMicroChunk(positon);
+		return uberChunk.GetClosestChunk(position);
 	}
 
 	private void SpawnChunks()
@@ -90,22 +83,14 @@ public class Planner : MonoBehaviour
 		uberChunkObj.transform.position = new Vector2(1000, 1000);
 		uberChunkObj.transform.parent = transform;
 		uberChunk = uberChunkObj.AddComponent<Chunk>();
-		for (float y = this.bottomLeftMapBorder.transform.position.y; y < this.topRightMapBorder.transform.position.y; y += this.microDistance * 0.5f)
+		for (float y = this.bottomLeftMapBorder.transform.position.y; y < this.topRightMapBorder.transform.position.y; y += this.chunkDistance * 0.5f)
 		{
-			for (float x = this.bottomLeftMapBorder.transform.position.x; x < this.topRightMapBorder.transform.position.x; x += this.microDistance * 0.5f)
+			for (float x = this.bottomLeftMapBorder.transform.position.x; x < this.topRightMapBorder.transform.position.x; x += this.chunkDistance * 0.5f)
 			{
-				GameObject chunkObj = Instantiate(prefabMicroChunk, transform);
+				GameObject chunkObj = Instantiate(prefabChunk, transform);
+				chunkObj.name = "Chunk(" + x + "," + y + ")";
 				chunkObj.transform.position = new Vector2(x, y);
-				uberChunk.GetMicroNeighbors().Add(chunkObj.GetComponent<Chunk>());
-			}
-		}
-		for (float y = this.bottomLeftMapBorder.transform.position.y; y < this.topRightMapBorder.transform.position.y; y += this.macroDistance * 0.5f)
-		{
-			for (float x = this.bottomLeftMapBorder.transform.position.x; x < this.topRightMapBorder.transform.position.x; x += this.macroDistance * 0.5f)
-			{
-				GameObject chunkObj = Instantiate(prefabMacroChunk, transform);
-				chunkObj.transform.position = new Vector2(x, y);
-				uberChunk.GetMacroNeighbors().Add(chunkObj.GetComponent<Chunk>());
+				uberChunk.GetNeighbors().Add(chunkObj.GetComponent<Chunk>());
 			}
 		}
 	}
@@ -113,7 +98,7 @@ public class Planner : MonoBehaviour
 	private void Awake()
 	{
 		SpawnChunks();
-		Chunk.SetupChunks(this.microDistance, this.macroDistance);
+		Chunk.SetupChunks(this.chunkDistance);
 		AddResource(this.startingResources);
 		this.count = new Dictionary<UnitType, int>
 		{

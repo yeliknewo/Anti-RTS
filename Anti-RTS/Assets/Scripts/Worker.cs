@@ -5,18 +5,26 @@
 [RequireComponent(typeof(Enemy))]
 public class Worker : MonoBehaviour
 {
+	private Planner planner => FindObjectOfType<Planner>();
 	private Enemy enemy => this.gameObject.GetComponent<Enemy>();
-	private Mineral miningTarget;
-	private WorkerJobStatus jobStatus = WorkerJobStatus.MOVINGTOMINERAL;
-	private Base dumpBase;
+
+	[SerializeField] private Mineral miningTarget;
+	[SerializeField] private WorkerJobStatus jobStatus = WorkerJobStatus.MOVINGTOMINERAL;
+	[SerializeField] private Base dumpBase;
+
 	private const float MINING_TIME = 1;
 	private const int MINE_AMOUNT = 1;
-	private Planner planner => FindObjectOfType<Planner>();
+	private const float miningDistance = 1;
 
 	public void SetBase(Base dumpBase)
 	{
 		this.dumpBase = dumpBase;
 		this.miningTarget = dumpBase.GetMiningTarget();
+	}
+
+	private void Start()
+	{
+		MoveToMineral();
 	}
 
 	private void Update()
@@ -31,7 +39,7 @@ public class Worker : MonoBehaviour
 				break;
 
 			case WorkerJobStatus.MOVINGTOMINERAL:
-				if (this.enemy.IsPathDone())
+				if (Vector2.Distance(transform.position, miningTarget.transform.position) < miningDistance)
 				{
 					Mine();
 				}
@@ -50,13 +58,13 @@ public class Worker : MonoBehaviour
 	private void MoveToMineral()
 	{
 		this.jobStatus = WorkerJobStatus.MOVINGTOMINERAL;
-		this.enemy.SetTargetChunk(this.miningTarget.GetComponent<Chunk>());
+		this.enemy.SetTargetChunk(this.miningTarget.GetChunk());
 	}
 
 	private void Mine()
 	{
 		this.jobStatus = WorkerJobStatus.MINING;
-		this.enemy.Stall(MINING_TIME);
+		this.enemy.Stall(Random.Range(MINING_TIME, MINING_TIME * 2));
 	}
 
 	private void Dump()

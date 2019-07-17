@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ChunkSize
+public class Wall : MonoBehaviour
 {
-   MACRO, MICRO
 }
-

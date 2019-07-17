@@ -7,6 +7,11 @@ public class AStar : MonoBehaviour
 
 	public Path FindPath(Chunk start, Chunk end)
 	{
+		if (start == null || end == null)
+		{
+			Debug.LogError("Null Variables");
+			return null;
+		}
 		Dictionary<Chunk, Node_> openSet = new Dictionary<Chunk, Node_>();
 		Dictionary<Chunk, Node_> closedSet = new Dictionary<Chunk, Node_>();
 		openSet.Add(start, new Node_(start, null, openSet, end));
@@ -34,6 +39,7 @@ public class AStar : MonoBehaviour
 					chunks.Add(temp.GetChunk());
 					temp = closedSet[temp.GetFrom()];
 				}
+				chunks.Add(temp.GetChunk());
 				chunks.Reverse();
 				return new Path(chunks);
 			}
@@ -41,22 +47,13 @@ public class AStar : MonoBehaviour
 			openSet.Remove(currentChunk);
 			closedSet.Add(current.GetChunk(), current);
 
-			List<Chunk> neighborChunks;
-
-			if (current.GetHScore() < this.smallChunkDistance)
-			{
-				neighborChunks = current.GetChunk().GetMicroNeighbors();
-			}
-			else
-			{
-				neighborChunks = current.GetChunk().GetMacroNeighbors();
-			}
+			List<Chunk> neighborChunks = current.GetChunk().GetNeighbors();
 
 			foreach (Chunk neighborChunk in neighborChunks)
 			{
 				if (!closedSet.ContainsKey(neighborChunk))
 				{
-					Node_ temp = new Node_(neighborChunk, currentChunk, openSet, end);
+					Node_ temp = new Node_(neighborChunk, currentChunk, closedSet, end);
 					if (!openSet.ContainsKey(neighborChunk))
 					{
 						openSet.Add(neighborChunk, temp);
@@ -83,7 +80,7 @@ public class AStar : MonoBehaviour
 		private readonly Chunk from;
 		private readonly float distanceToFrom;
 
-		public Node_(Chunk chunk, Chunk from, Dictionary<Chunk, Node_> openSet, Chunk end)
+		public Node_(Chunk chunk, Chunk from, Dictionary<Chunk, Node_> closedSet, Chunk end)
 		{
 			this.chunk = chunk;
 			this.from = from;
@@ -95,17 +92,17 @@ public class AStar : MonoBehaviour
 			{
 				this.distanceToFrom = (chunk.transform.position - from.transform.position).magnitude;
 			}
-			CalculateScores(openSet, end);
+			CalculateScores(closedSet, end);
 		}
 
-		private void CalculateScores(Dictionary<Chunk, Node_> openSet, Chunk end)
+		private void CalculateScores(Dictionary<Chunk, Node_> closedSet, Chunk end)
 		{
 			this.gScore = this.distanceToFrom;
 			Chunk temp = this.from;
 			while (temp != null)
 			{
-				this.gScore += openSet[temp].GetGScore();
-				temp = openSet[temp].GetFrom();
+				this.gScore += closedSet[temp].GetGScore();
+				temp = closedSet[temp].GetFrom();
 			}
 			this.hScore = (this.chunk.transform.position - end.transform.position).magnitude;
 			this.fScore = this.gScore + this.hScore;

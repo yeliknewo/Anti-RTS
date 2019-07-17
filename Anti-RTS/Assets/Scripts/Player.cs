@@ -8,26 +8,19 @@ public class Player : MonoBehaviour
 	[SerializeField] private float currentReloadTime;
 	[SerializeField] private GameObject prefabBullet;
 	[SerializeField] private Transform playerShooter;
-	[SerializeField] private Chunk currentMacroChunk;
-	[SerializeField] private Chunk currentMicroChunk;
+	[SerializeField] private Chunk currentChunk;
 
 	private Dictionary<StatType, Stat> stats;
 	private Dictionary<EnemyType, int> kills;
 
-	public Chunk GetCurrentMacroChunk()
+	public Chunk GetCurrentChunk()
 	{
-		return this.currentMacroChunk;
-	}
-
-	public Chunk GetCurrentMicroChunk()
-	{
-		return this.currentMicroChunk;
+		return this.currentChunk;
 	}
 
 	public void Setup()
 	{
-		this.currentMacroChunk = FindObjectOfType<Planner>().GetClosestMacroChunk(this.transform.position);
-		this.currentMicroChunk = this.currentMacroChunk.GetClosestMicroChunk(this.transform.position);
+		this.currentChunk = FindObjectOfType<Planner>().GetClosestChunk(this.transform.position);
 		this.kills = new Dictionary<EnemyType, int>
 			{
 				{ EnemyType.BASE, 0 },
@@ -41,7 +34,7 @@ public class Player : MonoBehaviour
 				StatType.MOVEMENT_SPEED,
 				new Stat(
 					this.kills,
-					1.0f,
+					5.0f,
 					new Dictionary<EnemyType, float>
 					{
 						{ EnemyType.BASE, 1.0f },
@@ -69,7 +62,7 @@ public class Player : MonoBehaviour
 				StatType.BULLET_SPEED,
 				new Stat(
 					this.kills,
-					1.0f,
+					5.0f,
 					new Dictionary<EnemyType, float>
 					{
 						{ EnemyType.BASE, 1.0f },
@@ -139,22 +132,7 @@ public class Player : MonoBehaviour
 	{
 		this.transform.position = this.transform.position + new Vector3(Input.GetAxis("HorizontalLeft"), Input.GetAxis("VerticalLeft")).normalized * GetStatVal(StatType.MOVEMENT_SPEED) * Time.deltaTime;
 
-		if (this.currentMacroChunk == null)
-		{
-			this.currentMacroChunk = FindObjectOfType<Planner>().GetClosestMacroChunk(this.transform.position);
-		}
-		else
-		{
-			this.currentMacroChunk = this.currentMacroChunk.GetClosestMacroChunk(this.transform.position);
-		}
-		if (this.currentMicroChunk == null)
-		{
-			this.currentMicroChunk = this.currentMacroChunk.GetClosestMicroChunk(this.transform.position);
-		}
-		else
-		{
-			this.currentMicroChunk = this.currentMicroChunk.GetClosestMicroChunk(this.transform.position);
-		}
+		this.currentChunk = this.currentChunk.GetClosestChunk(this.transform.position);
 
 		if (Input.GetAxis("VerticalRight") != 0 && Input.GetAxis("HorizontalRight") != 0)
 		{

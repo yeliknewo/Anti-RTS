@@ -152,6 +152,7 @@ MonoBehaviour:
   prefabBullet: {fileID: 8657546871154630202, guid: 2d7d27c359944d84ab55ed3d90c648a2,
     type: 3}
   playerShooter: {fileID: 535972227}
+  currentChunk: {fileID: 0}
 --- !u!114 &1114800149579576478
 MonoBehaviour:
   m_ObjectHideFlags: 0

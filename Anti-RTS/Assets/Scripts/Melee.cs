@@ -24,9 +24,7 @@ public class Melee : MonoBehaviour
 		}
 	}
 
-	private const float MACRO_CHUNK_RANGE = 10.0f;
-
-	public void Setup()
+	private void Start()
 	{
 		TargetPlayer();
 	}
@@ -39,24 +37,14 @@ public class Melee : MonoBehaviour
 
 	private void TargetPlayer()
 	{
-		this.enemy.SetTargetChunk(this.player.GetCurrentMicroChunk());
+		this.enemy.SetTargetChunk(this.player.GetCurrentChunk());
 	}
 
 	private void Update()
 	{
-		if (Vector2.Distance(this.player.transform.position, this.transform.position) > MACRO_CHUNK_RANGE)
+		if (this.player.GetCurrentChunk() != this.enemy.GetTargetChunk())
 		{
-			if (this.player.GetCurrentMacroChunk() != this.enemy.GetTargetChunk().GetMacroNeighbors()[0])
-			{
-				TargetPlayer();
-			}
-		}
-		else
-		{
-			if(this.player.GetCurrentMicroChunk() != this.enemy.GetTargetChunk())
-			{
-				TargetPlayer();
-			}
+			TargetPlayer();
 		}
 
 		if (this.reloadTime < Time.time && Vector2.Distance(this.transform.position, this.player.transform.position) < this.range)

@@ -6,7 +6,6 @@
 public class Ranged : MonoBehaviour
 {
 	private Enemy enemy => this.gameObject.GetComponent<Enemy>();
-	private const float MACRO_CHUNK_RANGE = 10f;
 	[SerializeField] private double reloadTime;
 	[SerializeField] private double currentReloadTime;
 	[SerializeField] private int bulletDamage;
@@ -35,7 +34,7 @@ public class Ranged : MonoBehaviour
 
 	private void TargetPlayer()
 	{
-		this.enemy.SetTargetChunk(this.player.GetCurrentMicroChunk());
+		this.enemy.SetTargetChunk(this.player.GetCurrentChunk());
 	}
 
 	private void Attack()
@@ -50,19 +49,9 @@ public class Ranged : MonoBehaviour
 
 	private void Update()
 	{
-		if (Vector2.Distance(this.player.transform.position, this.transform.position) > MACRO_CHUNK_RANGE)
+		if (this.player.GetCurrentChunk() != this.enemy.GetTargetChunk())
 		{
-			if (this.player.GetCurrentMacroChunk() != this.enemy.GetTargetChunk().GetMacroNeighbors()[0])
-			{
-				TargetPlayer();
-			}
-		}
-		else
-		{
-			if (this.player.GetCurrentMicroChunk() != this.enemy.GetTargetChunk())
-			{
-				TargetPlayer();
-			}
+			TargetPlayer();
 		}
 		Vector2 diff = transform.position - player.transform.position;
 		float angle = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg + 90;
