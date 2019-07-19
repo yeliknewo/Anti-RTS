@@ -7,6 +7,9 @@ public class CameraFollowPlayer : MonoBehaviour
 
 	private void Update()
 	{
+		if(FindObjectOfType<Planner>().IsPaused() || target == null) {
+			return;
+		}
 		this.transform.position = this.target.position + this.offset;
 
 	}

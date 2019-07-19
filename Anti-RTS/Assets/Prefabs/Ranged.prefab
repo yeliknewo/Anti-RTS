@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 7045188961388618581}
   - component: {fileID: 3728323440868452744}
   - component: {fileID: 3558329540133616751}
-  - component: {fileID: 7978634748980584025}
+  - component: {fileID: 7016332026397392863}
   m_Layer: 0
   m_Name: Ranged
   m_TagString: Untagged
@@ -160,6 +160,7 @@ MonoBehaviour:
   stallTime: 0
   nextChunk: {fileID: 0}
   currentChunk: {fileID: 0}
+  dirtyPathInterval: 1
 --- !u!114 &3558329540133616751
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,7 +181,7 @@ MonoBehaviour:
   prefabBullet: {fileID: 8657546871154630202, guid: 2d7d27c359944d84ab55ed3d90c648a2,
     type: 3}
   enemyShooter: {fileID: 7827825227821279696}
---- !u!60 &7978634748980584025
+--- !u!60 &7016332026397392863
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -205,6 +206,8 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0, y: 0.5}
-      - {x: -0.4330127, y: -0.25000003}
-      - {x: 0.43301272, y: -0.24999996}
+    - - {x: 0.27511966, y: 0.023352562}
+      - {x: 0, y: 0.5}
+      - {x: -0.29513964, y: -0.014272197}
+      - {x: -0.2805231, y: -0.40725496}
+      - {x: 0.2852884, y: -0.40725484}

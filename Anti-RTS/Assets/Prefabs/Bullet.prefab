@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8657546871154630201}
   - component: {fileID: 8657546871154630203}
   - component: {fileID: 8994921119077121472}
-  - component: {fileID: 4165926877953302842}
+  - component: {fileID: 4493580701329470154}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: Untagged
@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 8657546871154630202}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 1}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: e4c46ab450b6ec848b88b60930339d6e, type: 3}
-  m_Color: {r: 0.9379643, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.8773585, g: 0.71309924, b: 0.07035423, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   idEnum: 6
---- !u!60 &4165926877953302842
+--- !u!60 &4493580701329470154
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -155,6 +155,8 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0, y: 0.5}
-      - {x: -0.4330127, y: -0.25000003}
-      - {x: 0.43301272, y: -0.24999996}
+    - - {x: 0.27511966, y: 0.023352562}
+      - {x: 0, y: 0.5}
+      - {x: -0.29513964, y: -0.014272197}
+      - {x: -0.2805231, y: -0.40725496}
+      - {x: 0.2852884, y: -0.40725484}

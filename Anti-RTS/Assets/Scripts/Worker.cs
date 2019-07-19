@@ -29,6 +29,10 @@ public class Worker : MonoBehaviour
 
 	private void Update()
 	{
+		if (FindObjectOfType<Planner>().IsPaused())
+		{
+			return;
+		}
 		switch (this.jobStatus)
 		{
 			case WorkerJobStatus.MINING:

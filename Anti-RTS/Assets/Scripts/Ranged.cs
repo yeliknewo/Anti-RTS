@@ -49,6 +49,10 @@ public class Ranged : MonoBehaviour
 
 	private void Update()
 	{
+		if (FindObjectOfType<Planner>().IsPaused())
+		{
+			return;
+		}
 		if (this.player.GetCurrentChunk() != this.enemy.GetTargetChunk())
 		{
 			TargetPlayer();

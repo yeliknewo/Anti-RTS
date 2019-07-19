@@ -158,7 +158,7 @@ public class Action
 [System.Serializable]
 public class State
 {
-	public const int PRECISION = 100;
+	public const int PRECISION = 5;
 
 	private readonly Dictionary<UnitType, float> ratio;
 
@@ -238,7 +238,7 @@ public class World
 			nextRatio.Add(type, lastRatio[type]);
 		}
 		float increase = lastRatio[action.GetUnitType()] * action.GetPercentIncrease();
-		foreach (UnitType type in nextRatio.Keys)
+		foreach (UnitType type in lastRatio.Keys)
 		{
 			if (type == action.GetUnitType())
 			{

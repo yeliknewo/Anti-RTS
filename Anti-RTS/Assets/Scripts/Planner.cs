@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Planner : MonoBehaviour
 {
@@ -12,14 +13,17 @@ public class Planner : MonoBehaviour
 	private QLearner qLearner;
 	private State state;
 	private World world;
+	private bool gameEnded;
 
 	[SerializeField] private GameObject prefabChunk;
-	[SerializeField] private Transform topRightMapBorder;
-	[SerializeField] private Transform bottomLeftMapBorder;
-	[SerializeField] private int startingResources;
 	[SerializeField] private GameObject prefabMelee;
 	[SerializeField] private GameObject prefabRanged;
 	[SerializeField] private GameObject prefabWorker;
+	[SerializeField] private GameObject prefabWall;
+
+	[SerializeField] private Transform topRightMapBorder;
+	[SerializeField] private Transform bottomLeftMapBorder;
+	[SerializeField] private int startingResources;
 	[SerializeField] private string qValuePath;
 	[SerializeField] private string statePath;
 	[SerializeField] private int eValue;
@@ -27,6 +31,13 @@ public class Planner : MonoBehaviour
 	[SerializeField] private double gamma;
 	[SerializeField] private float chunkDistance;
 	[SerializeField] private Chunk uberChunk;
+
+	public bool IsPaused()
+	{
+		bool paused = FindObjectOfType<Player>() == null || FindObjectOfType<Base>() == null;
+		Time.timeScale = paused ? 0 : 1;
+		return paused;
+	}
 
 	private void Spawn()
 	{
@@ -60,7 +71,23 @@ public class Planner : MonoBehaviour
 
 	private void Update()
 	{
-		if (this.resources >= UNIT_COST)
+		if(gameEnded)
+		{
+			return;
+		}
+		if (FindObjectOfType<Player>() == null)
+		{
+			EndGame(true);
+		}
+		if (FindObjectOfType<Base>() == null)
+		{
+			EndGame(false);
+		}
+		if (FindObjectOfType<Planner>().IsPaused())
+		{
+			return;
+		}
+		while (this.resources >= UNIT_COST)
 		{
 			Spawn();
 		}
@@ -76,22 +103,35 @@ public class Planner : MonoBehaviour
 		return uberChunk.GetClosestChunk(position);
 	}
 
+	private void SpawnWalls()
+	{
+
+	}
+
 	private void SpawnChunks()
+	{
+		for (float y = this.bottomLeftMapBorder.transform.position.y; y < this.topRightMapBorder.transform.position.y; y += this.chunkDistance)
+		{
+			for (float x = this.bottomLeftMapBorder.transform.position.x; x < this.topRightMapBorder.transform.position.x; x += this.chunkDistance)
+			{
+				GameObject chunkObj = Instantiate(prefabChunk, transform);
+				chunkObj.name = "Chunk(" + x + "," + y + ")";
+				chunkObj.transform.position = new Vector2(x, y);
+
+			}
+		}
+	}
+
+	private void SpawnUberChunk()
 	{
 		GameObject uberChunkObj = new GameObject();
 		uberChunkObj.name = "UberChunk";
 		uberChunkObj.transform.position = new Vector2(1000, 1000);
 		uberChunkObj.transform.parent = transform;
 		uberChunk = uberChunkObj.AddComponent<Chunk>();
-		for (float y = this.bottomLeftMapBorder.transform.position.y; y < this.topRightMapBorder.transform.position.y; y += this.chunkDistance * 0.5f)
+		foreach(Chunk chunk in FindObjectsOfType<Chunk>())
 		{
-			for (float x = this.bottomLeftMapBorder.transform.position.x; x < this.topRightMapBorder.transform.position.x; x += this.chunkDistance * 0.5f)
-			{
-				GameObject chunkObj = Instantiate(prefabChunk, transform);
-				chunkObj.name = "Chunk(" + x + "," + y + ")";
-				chunkObj.transform.position = new Vector2(x, y);
-				uberChunk.GetNeighbors().Add(chunkObj.GetComponent<Chunk>());
-			}
+			uberChunk.GetNeighbors().Add(chunk);
 		}
 	}
 
@@ -99,6 +139,7 @@ public class Planner : MonoBehaviour
 	{
 		SpawnChunks();
 		Chunk.SetupChunks(this.chunkDistance);
+		SpawnUberChunk();
 		AddResource(this.startingResources);
 		this.count = new Dictionary<UnitType, int>
 		{
@@ -120,7 +161,7 @@ public class Planner : MonoBehaviour
 		{
 			List<int> tableDimensions = new List<int>
 			{
-				State.PRECISION, State.PRECISION, State.PRECISION
+				State.PRECISION, State.PRECISION, State.PRECISION, actions.Count
 			};
 
 			double startingQ = 1.0;
@@ -146,14 +187,21 @@ public class Planner : MonoBehaviour
 
 		this.ratio = this.state.GetRatio();
 
+		foreach(UnitType unitType in ratio.Keys)
+		{
+			Debug.Log(unitType + " ||| " + ratio[unitType]);
+		}
+
 		FindObjectOfType<Player>().Setup();
 	}
 
 	public void EndGame(bool playerLost)
 	{
+		gameEnded = true;
 		this.state = this.qLearner.RunStep(this.world, this.state, this.eValue, this.alpha, this.gamma, playerLost);
 		this.qLearner.saveToDisk(this.qValuePath);
 		Utils.saveToDisk(this.statePath, this.state);
+		SceneManager.LoadSceneAsync("DemoScene");
 	}
 
 	public UnitType GetNextUnit()

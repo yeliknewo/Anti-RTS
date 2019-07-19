@@ -130,6 +130,10 @@ public class Player : MonoBehaviour
 
 	private void Update()
 	{
+		if (FindObjectOfType<Planner>().IsPaused())
+		{
+			return;
+		}
 		this.transform.position = this.transform.position + new Vector3(Input.GetAxis("HorizontalLeft"), Input.GetAxis("VerticalLeft")).normalized * GetStatVal(StatType.MOVEMENT_SPEED) * Time.deltaTime;
 
 		this.currentChunk = this.currentChunk.GetClosestChunk(this.transform.position);

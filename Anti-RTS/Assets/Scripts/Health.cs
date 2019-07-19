@@ -58,7 +58,7 @@ public class Health : MonoBehaviour
 			else
 			{
 				Base theBase = GetComponent<Base>();
-				if(theBase != null)
+				if (theBase != null)
 				{
 					FindObjectOfType<Player>().DoKill(EnemyType.BASE);
 				}

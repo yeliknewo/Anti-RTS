@@ -13,12 +13,13 @@ public class Chunk : MonoBehaviour
 		{
 			this.neighbors = new List<Chunk>();
 		}
-		return neighbors;
+		this.neighbors.RemoveAll((obj => obj == null));
+		return this.neighbors;
 	}
 
 	public Chunk GetClosestChunk(Vector2 position)
 	{
-		return GetClosestChunk(position, this.neighbors);
+		return GetClosestChunk(position, GetNeighbors());
 	}
 
 	private static Chunk GetClosestChunk(Vector2 position, List<Chunk> neighbors)
@@ -41,17 +42,20 @@ public class Chunk : MonoBehaviour
 	{
 		foreach (Chunk chunk in FindObjectsOfType<Chunk>())
 		{
-			foreach(Wall wall in FindObjectsOfType<Wall>())
+			foreach (Wall wall in FindObjectsOfType<Wall>())
 			{
-				if (Vector2.Distance(chunk.transform.position, wall.transform.position) < UNIT_DISTANCE)
+				if(wall.GetComponent<BoxCollider2D>().OverlapPoint(chunk.transform.position))
 				{
-					Debug.LogError("Invalid Map", wall);
+					Destroy(chunk.gameObject);
 				}
 			}
+		}
+		foreach (Chunk chunk in FindObjectsOfType<Chunk>())
+		{
 			foreach (Chunk possibleNeighbor in FindObjectsOfType<Chunk>())
 			{
 				float distance = Vector2.Distance(chunk.transform.position, possibleNeighbor.transform.position);
-				if (distance < chunkDistance)
+				if (distance < chunkDistance * 2)
 				{
 					chunk.GetNeighbors().Add(possibleNeighbor);
 				}

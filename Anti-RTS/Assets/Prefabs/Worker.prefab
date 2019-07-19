@@ -81,6 +81,7 @@ MonoBehaviour:
   stallTime: 0
   nextChunk: {fileID: 0}
   currentChunk: {fileID: 0}
+  dirtyPathInterval: 1
 --- !u!114 &2919676687536259304
 MonoBehaviour:
   m_ObjectHideFlags: 0

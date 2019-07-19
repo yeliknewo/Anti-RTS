@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class AStar : MonoBehaviour
 {
-	[SerializeField] float smallChunkDistance;
-
 	public Path FindPath(Chunk start, Chunk end)
 	{
 		if (start == null || end == null)
@@ -68,6 +66,7 @@ public class AStar : MonoBehaviour
 				}
 			}
 		}
+		Debug.LogError("Unable to Find Path");
 		return null;
 	}
 

@@ -45,22 +45,15 @@ public class Enemy : MonoBehaviour
 
 	private void Update()
 	{
+		if (FindObjectOfType<Planner>().IsPaused())
+		{
+			return;
+		}
 		Move();
 	}
 
 	private void Move()
 	{
-		bool usePath = this.unitType == UnitType.WORKER;
-		if (this.unitType != UnitType.WORKER)
-		{
-			foreach (RaycastHit2D hit in Physics2D.RaycastAll(this.transform.position, FindObjectOfType<Player>().transform.position))
-			{
-				if (hit.collider.GetComponent<Identifier>().IsWall())
-				{
-					usePath = true;
-				}
-			}
-		}
 		if (this.nextChunk == null)
 		{
 			if (this.dirtyPath)
@@ -76,15 +69,7 @@ public class Enemy : MonoBehaviour
 		{
 			return;
 		}
-		Vector2 target;
-		if (usePath)
-		{
-			target = this.nextChunk.transform.position;
-		}
-		else
-		{
-			target = FindObjectOfType<Player>().transform.position;
-		}
+		Vector2 target = this.nextChunk.transform.position;
 		Vector2 diff = target - (Vector2)this.transform.position;
 		float angle = Mathf.Atan2(diff.y, diff.x);
 		bool snap = false;
