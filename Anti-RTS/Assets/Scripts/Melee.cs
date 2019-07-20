@@ -24,18 +24,13 @@ public class Melee : MonoBehaviour
 		}
 	}
 
-	private void Start()
-	{
-		TargetPlayer();
-	}
-
 	private void Attack()
 	{
 		this.currentReloadTime = Time.time + this.reloadTime;
 		this.player.GetComponent<Health>().TakeDamage(this.damage);
 	}
 
-	private void TargetPlayer()
+	public void TargetPlayer()
 	{
 		this.enemy.SetTargetChunk(this.player.GetCurrentChunk());
 	}
@@ -46,7 +41,7 @@ public class Melee : MonoBehaviour
 		{
 			return;
 		}
-		if (this.player.GetCurrentChunk() != this.enemy.GetTargetChunk())
+		if (this.player.GetCurrentChunk() != this.enemy.GetTargetChunk()  && Time.deltaTime < 1f / 50f)
 		{
 			TargetPlayer();
 		}

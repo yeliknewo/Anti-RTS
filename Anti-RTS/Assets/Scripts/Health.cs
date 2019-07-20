@@ -34,6 +34,8 @@ public class Health : MonoBehaviour
 			if (enemy != null)
 			{
 				UnitType unitType = enemy.GetUnitType();
+				FindObjectOfType<Planner>().KillUnit(unitType);
+
 				EnemyType enemyType;
 				switch (unitType)
 				{
@@ -53,7 +55,7 @@ public class Health : MonoBehaviour
 						Debug.LogError("INvalid Enemy Type in TakeDamage");
 						return;
 				}
-				FindObjectOfType<Player>().DoKill(enemyType);
+				FindObjectOfType<Player>().DoKill(enemyType);	
 			}
 			else
 			{

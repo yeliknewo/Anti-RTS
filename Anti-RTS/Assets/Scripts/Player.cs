@@ -38,9 +38,9 @@ public class Player : MonoBehaviour
 					new Dictionary<EnemyType, float>
 					{
 						{ EnemyType.BASE, 1.0f },
-						{ EnemyType.MELEE, 1.0f },
-						{ EnemyType.RANGED, 1.0f },
-						{ EnemyType.WORKER, 1.0f },
+						{ EnemyType.MELEE, 0.5f },
+						{ EnemyType.RANGED, 0.2f },
+						{ EnemyType.WORKER, 0.3f },
 					}
 				)
 			},
@@ -52,9 +52,9 @@ public class Player : MonoBehaviour
 					new Dictionary<EnemyType, float>
 					{
 						{ EnemyType.BASE, 1.0f },
-						{ EnemyType.MELEE, 1.0f },
-						{ EnemyType.RANGED, 1.0f },
-						{ EnemyType.WORKER, 1.0f },
+						{ EnemyType.MELEE, 0.2f },
+						{ EnemyType.RANGED, 0.5f },
+						{ EnemyType.WORKER, 0.4f },
 					}
 				)
 			},
@@ -66,9 +66,9 @@ public class Player : MonoBehaviour
 					new Dictionary<EnemyType, float>
 					{
 						{ EnemyType.BASE, 1.0f },
-						{ EnemyType.MELEE, 1.0f },
-						{ EnemyType.RANGED, 1.0f },
-						{ EnemyType.WORKER, 1.0f },
+						{ EnemyType.MELEE, 0.0f },
+						{ EnemyType.RANGED, 0.5f },
+						{ EnemyType.WORKER, 0.2f },
 					}
 				)
 			},
@@ -79,10 +79,10 @@ public class Player : MonoBehaviour
 					1.0f,
 					new Dictionary<EnemyType, float>
 					{
-						{ EnemyType.BASE, 1.0f },
-						{ EnemyType.MELEE, 1.0f },
-						{ EnemyType.RANGED, 1.0f },
-						{ EnemyType.WORKER, 1.0f },
+						{ EnemyType.BASE, -0.04f },
+						{ EnemyType.MELEE, -0.01f },
+						{ EnemyType.RANGED, -0.02f },
+						{ EnemyType.WORKER, -0.03f },
 					}
 				)
 			},
@@ -93,10 +93,10 @@ public class Player : MonoBehaviour
 					1.0f,
 					new Dictionary<EnemyType, float>
 					{
-						{ EnemyType.BASE, 1.0f },
+						{ EnemyType.BASE, 4.0f },
 						{ EnemyType.MELEE, 1.0f },
-						{ EnemyType.RANGED, 1.0f },
-						{ EnemyType.WORKER, 1.0f },
+						{ EnemyType.RANGED, 2.0f },
+						{ EnemyType.WORKER, 2.0f },
 					}
 				)
 			}

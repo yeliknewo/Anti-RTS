@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Planner : MonoBehaviour
 {
-	private const int UNIT_COST = 5;
+	private const int UNIT_COST = 2;
 
 	private Dictionary<UnitType, float> ratio;
 	private Dictionary<UnitType, int> count;
@@ -31,6 +31,7 @@ public class Planner : MonoBehaviour
 	[SerializeField] private double gamma;
 	[SerializeField] private float chunkDistance;
 	[SerializeField] private Chunk uberChunk;
+	[SerializeField] private int baseIndex;
 
 	public bool IsPaused()
 	{
@@ -43,7 +44,8 @@ public class Planner : MonoBehaviour
 	{
 		UnitType nextUnitType = GetNextUnit();
 		Base[] bases = FindObjectsOfType<Base>();
-		Base theBase = bases[Random.Range(0, bases.Length)];
+		baseIndex = (baseIndex + 1) % bases.Length;
+		Base theBase = bases[baseIndex];
 		GameObject unit;
 		switch (nextUnitType)
 		{
@@ -71,7 +73,7 @@ public class Planner : MonoBehaviour
 
 	private void Update()
 	{
-		if(gameEnded)
+		if (gameEnded)
 		{
 			return;
 		}
@@ -87,9 +89,12 @@ public class Planner : MonoBehaviour
 		{
 			return;
 		}
-		while (this.resources >= UNIT_COST)
+		if(Time.deltaTime < 1f / 50f)
 		{
-			Spawn();
+			while (this.resources >= UNIT_COST)
+			{
+				Spawn();
+			}
 		}
 	}
 
@@ -129,7 +134,7 @@ public class Planner : MonoBehaviour
 		uberChunkObj.transform.position = new Vector2(1000, 1000);
 		uberChunkObj.transform.parent = transform;
 		uberChunk = uberChunkObj.AddComponent<Chunk>();
-		foreach(Chunk chunk in FindObjectsOfType<Chunk>())
+		foreach (Chunk chunk in FindObjectsOfType<Chunk>())
 		{
 			uberChunk.GetNeighbors().Add(chunk);
 		}
@@ -156,6 +161,7 @@ public class Planner : MonoBehaviour
 		};
 
 		this.world = new World();
+		world.UpdateWorld(1, 1);
 
 		if (!File.Exists(this.qValuePath))
 		{
@@ -177,9 +183,9 @@ public class Planner : MonoBehaviour
 		{
 			Utils.saveToDisk(this.statePath, new State(new Dictionary<UnitType, float>()
 			{
-				{ UnitType.MELEE, 1.0f },
-				{ UnitType.RANGED, 1.0f },
-				{ UnitType.WORKER, 1.0f },
+				{ UnitType.MELEE, 0.33f },
+				{ UnitType.RANGED, 0.33f },
+				{ UnitType.WORKER, 0.33f },
 			}));
 		}
 
@@ -187,7 +193,7 @@ public class Planner : MonoBehaviour
 
 		this.ratio = this.state.GetRatio();
 
-		foreach(UnitType unitType in ratio.Keys)
+		foreach (UnitType unitType in ratio.Keys)
 		{
 			Debug.Log(unitType + " ||| " + ratio[unitType]);
 		}
@@ -206,6 +212,11 @@ public class Planner : MonoBehaviour
 
 	public UnitType GetNextUnit()
 	{
+		if (count[UnitType.WORKER] < FindObjectsOfType<Base>().Length)
+		{
+			this.count[UnitType.WORKER] += 1;
+			return UnitType.WORKER;
+		}
 		UnitType nextType = UnitType.WORKER;
 		float max = float.MinValue;
 		float total = 0;

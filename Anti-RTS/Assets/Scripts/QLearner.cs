@@ -225,7 +225,7 @@ public class World
 	public StateReward GetNextStateReward(State state, Action action, bool wonLastGame)
 	{
 		State nextState = GetNextState(state, action);
-		int reward = GetReward(wonLastGame);
+		int reward = GetReward(wonLastGame, nextState);
 		return new StateReward(nextState, reward);
 	}
 
@@ -238,22 +238,36 @@ public class World
 			nextRatio.Add(type, lastRatio[type]);
 		}
 		float increase = lastRatio[action.GetUnitType()] * action.GetPercentIncrease();
+		float total = 0f;
 		foreach (UnitType type in lastRatio.Keys)
 		{
 			if (type == action.GetUnitType())
 			{
-				nextRatio[type] = lastRatio[type] + increase;
+				nextRatio[type] = Mathf.Min(0.9f, lastRatio[type] + increase);
 			}
 			else
 			{
-				nextRatio[type] = lastRatio[type] - increase / 2f;
+				nextRatio[type] = Mathf.Max(0.1f, lastRatio[type] - increase / 2f);
 			}
+			total += nextRatio[type];
+		}
+		foreach(UnitType type in lastRatio.Keys)
+		{
+			nextRatio[type] /= total;
 		}
 		return new State(nextRatio);
 	}
 
-	private int GetReward(bool wonLastGame)
+	private int GetReward(bool wonLastGame, State state)
 	{
+		foreach(UnitType unitType in state.GetRatio().Keys)
+		{
+			float val = state.GetRatio()[unitType];
+			if(val <= 1.0f || val >= 5.0f)
+			{
+				return loseReward * 100;
+			}
+		}
 		if (wonLastGame)
 		{
 			return this.winReward;

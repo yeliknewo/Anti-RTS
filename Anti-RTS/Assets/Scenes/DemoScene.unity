@@ -1314,7 +1314,7 @@ MonoBehaviour:
     type: 3}
   topRightMapBorder: {fileID: 756141061}
   bottomLeftMapBorder: {fileID: 979718163}
-  startingResources: 30
+  startingResources: 14
   qValuePath: qValue.dat
   statePath: state.dat
   eValue: 4

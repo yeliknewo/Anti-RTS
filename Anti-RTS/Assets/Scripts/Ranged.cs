@@ -27,12 +27,7 @@ public class Ranged : MonoBehaviour
 		}
 	}
 
-	private void Start()
-	{
-		TargetPlayer();
-	}
-
-	private void TargetPlayer()
+	public void TargetPlayer()
 	{
 		this.enemy.SetTargetChunk(this.player.GetCurrentChunk());
 	}
@@ -53,7 +48,7 @@ public class Ranged : MonoBehaviour
 		{
 			return;
 		}
-		if (this.player.GetCurrentChunk() != this.enemy.GetTargetChunk())
+		if (this.player.GetCurrentChunk() != this.enemy.GetTargetChunk() && Time.deltaTime < 1f / 50f)
 		{
 			TargetPlayer();
 		}
