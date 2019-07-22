@@ -14,7 +14,7 @@ public class Worker : MonoBehaviour
 
 	private const float MINING_TIME = 1;
 	private const int MINE_AMOUNT = 1;
-	private const float miningDistance = 1;
+	private const float MINING_DISTANCE = 0.1f;
 
 	public void SetBase(Base dumpBase)
 	{
@@ -43,14 +43,14 @@ public class Worker : MonoBehaviour
 				break;
 
 			case WorkerJobStatus.MOVINGTOMINERAL:
-				if (Vector2.Distance(transform.position, miningTarget.transform.position) < miningDistance)
+				if (Vector2.Distance(transform.position, miningTarget.transform.position) < MINING_DISTANCE)
 				{
 					Mine();
 				}
 				break;
 
 			case WorkerJobStatus.DUMPING:
-				if(this.enemy.IsPathDone())
+				if(Vector2.Distance(transform.position, dumpBase.transform.position) < MINING_DISTANCE)
 				{
 					MoveToMineral();
 					planner.AddResource(MINE_AMOUNT);

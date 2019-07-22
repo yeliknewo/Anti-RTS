@@ -78,7 +78,7 @@ public class Enemy : MonoBehaviour
 			target = targetChunk.transform.position;
 		}
 		bool wallInWay = false;
-		foreach (RaycastHit2D hit in Physics2D.RaycastAll(this.transform.position, target))
+		foreach (RaycastHit2D hit in Physics2D.LinecastAll(this.transform.position, target))
 		{
 			if (hit.collider.gameObject.GetComponent<Wall>() != null)
 			{
